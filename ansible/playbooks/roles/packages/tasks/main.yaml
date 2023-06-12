@@ -9,6 +9,7 @@
   vars:
     packages:
     - apt-transport-https
+    - bat
     - ca-certificates
     - curl
     - gnupg-agent
