@@ -9,3 +9,6 @@
   vars:
     packages:
       - plib
+      # FEDORA
+      - plib-devel
+      - freealut
