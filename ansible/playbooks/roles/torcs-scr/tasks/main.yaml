@@ -42,7 +42,7 @@
 - name: make datainstall torcs-server
   become: True
   community.general.make:
-    chdir: /home/vagrant/torcs
+    chdir: /home/{{ ansible_user_id }}/torcs
     target: datainstall
 
 - name: Allow tcp ports
