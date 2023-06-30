@@ -22,9 +22,9 @@ services:
     # Port mapping from host to container
     ports:
       #  HOST:CONTAINER
-      - '3002:3002'
+      - '3005:3005'
     expose:
-      - '3002'
+      - '3005'
 
   agent7:
     image: jaboo/agent:22237
