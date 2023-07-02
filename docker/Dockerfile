@@ -35,7 +35,4 @@ USER ${NB_USER}
 # Add Python requirements with pip
 RUN pip install --upgrade pip ptpython
 
-# Add Python requirements with pip
-RUN pip install --upgrade pip keyboard 
-
-ENTRYPOINT ["python" "-m ptpython"]
+ENTRYPOINT ["python", "-m ptpython"]
