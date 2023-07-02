@@ -34,11 +34,11 @@ RUN conda install conda=23.5.0 \
 USER ${NB_USER}
 
 # Non-root operations
-WORKDIR /usr/local
+
+WORKDIR /home/${NB_USER}
 
 # Add Python requirements with pip
+ENV PATH=$PATH:/home/${NB_USER}/.local/bin
 RUN pip install --upgrade pip tensorflow
 
-# ENV PATH=$PATH:.local/bin
-
-ENTRYPOINT ["python", "-m ptpython"]
+ENTRYPOINT ["ptpython"]
