@@ -2,6 +2,7 @@ ARG BASE_CONTAINER=continuumio/miniconda3:23.3.1-0
 
 FROM $BASE_CONTAINER
 
+# Environment variables
 ENV NB_USER="student"
 
 LABEL MAINTAINER="Jeroen Boogaard <j.a.boogaard@hr.nl>"
@@ -9,7 +10,8 @@ LABEL MAINTAINER="Jeroen Boogaard <j.a.boogaard@hr.nl>"
 # Root operations
 
 RUN apt-get -y update \
-    && apt-get -y upgrade
+    && apt-get -y upgrade \
+    && apt-get install -y gcc
 
 # Set Timezone
 RUN apt-get install tzdata \
@@ -23,8 +25,8 @@ RUN useradd -m ${NB_USER}
 RUN conda install conda=23.3.1 \
     && conda update --all
 
-RUN conda install -y -c conda-forge numpy \ 
-    && conda install -y -c conda-forge pandas scikit-learn pypickle \
+RUN conda install conda=23.5.0 \ 
+    && conda install -y -c conda-forge numpy pandas pathlib pypickle scikit-learn \
     && conda install -y -c esrf-bcu ptpython \
     && conda install -y -c pytorch pytorch
 
@@ -32,8 +34,11 @@ RUN conda install -y -c conda-forge numpy \
 USER ${NB_USER}
 
 # Non-root operations
+WORKDIR /usr/local
 
 # Add Python requirements with pip
-RUN python -m pip install --upgrade pip tensorflow
+RUN pip install --upgrade pip tensorflow
 
-ENTRYPOINT ["python"]
+# ENV PATH=$PATH:.local/bin
+
+ENTRYPOINT ["python", "-m ptpython"]
