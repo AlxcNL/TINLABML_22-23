@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=continuumio/miniconda3:23.3.1-0-alpine
+ARG BASE_CONTAINER=continuumio/miniconda3:23.3.1-0
 
 FROM $BASE_CONTAINER
 
@@ -8,31 +8,32 @@ LABEL MAINTAINER="Jeroen Boogaard <j.a.boogaard@hr.nl>"
 
 # Root operations
 
-RUN apk update \
-    && apk upgrade \
-    && apk add bash
+RUN apt-get -y update \
+    && apt-get -y upgrade
 
 # Set Timezone
-RUN apk add tzdata \
+RUN apt-get install tzdata \
     && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
-    && echo "Europe/Amsterdam" >  /etc/timezone \
-    && apk del tzdata
+    && echo "Europe/Amsterdam" >  /etc/timezone
 
 # Add non-root user and add directory app
-RUN adduser -D ${NB_USER} 
+RUN useradd -m ${NB_USER} 
 
 # Add Python requirements with conda
-RUN conda update --all \
-    && conda install -c conda-forge numpy pandas pickle5 pymysql scikit-learn \
-    && conda install -c pytorch pytorch \
-    && conda install -y -c anaconda tensorflow 
-    
+RUN conda install conda=23.3.1 \
+    && conda update --all
+
+RUN conda install -y -c conda-forge numpy \ 
+    && conda install -y -c conda-forge pandas scikit-learn pypickle \
+    && conda install -y -c esrf-bcu ptpython \
+    && conda install -y -c pytorch pytorch
+
 # Switch to non-root user
 USER ${NB_USER}
 
 # Non-root operations
 
 # Add Python requirements with pip
-RUN pip install --upgrade pip ptpython
+RUN python -m pip install --upgrade pip tensorflow
 
-ENTRYPOINT ["python", "-m ptpython"]
+ENTRYPOINT ["python"]
